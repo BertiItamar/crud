@@ -2,7 +2,7 @@
 
 class api_response{
     private $data;
-    private $availabel_methods = ['GET', 'SET'];
+    private $available_methods = ['GET', 'POST'];
 
     public function __construct()
     {
@@ -11,7 +11,7 @@ class api_response{
 
     public function check_method($method){
         // check if method is valid
-        return in_array($method, $this->availabel_methods);
+        return in_array($method, $this->available_methods);
     }
 
     public function set_method($method){

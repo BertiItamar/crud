@@ -15,6 +15,14 @@ class api_logic{
         return method_exists($this, $this->endpoint);
     }
 
+    public function error_response($message){
+        return[
+            'status' => 'Error',
+            'message' => $message,
+            'result' => []
+        ];       
+    }
+
     public function status(){
         return[
             'status' => 'SUCCESS',
@@ -22,18 +30,171 @@ class api_logic{
         ];
     }
 
-    public function get_all_client(){
+    
+    public function get_all_active_client(){
         //query to the database
+        $sql = "SELECT * FROM clientes WHERE deleted_at IS NULL";
+
+        $db = new database();
+        $results = $db->EXE_QUERY($sql);
+
         return[
             'status' => 'Success',
             'message' => '',
-            'result' => [
-                'joao', 'ana', 'pedro', 'antonio'
-            ]
+            'result' => $results
         ];
     }
 
+    public function get_all_inactive_client(){
+        //query to the database
+        $sql = "SELECT * FROM clientes WHERE deleted_at IS NOT NULL";
+
+        $db = new database();
+        $results = $db->EXE_QUERY($sql);
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    public function get_client(){
+        //query to the database
+        $sql = "SELECT * FROM clientes WHERE 1 ";
+
+        if(key_exists('id', $this->params)){
+
+            if(filter_var($this->params['id'], FILTER_VALIDATE_INT)){
+                $sql .= "AND id_cliente = ". intval($this->params['id']);
+            }
+        }else{
+
+            return $this->error_response('ID cliente not specified');                  
+        }
+
+        $db = new database();
+        $results = $db->EXE_QUERY($sql);
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    public function get_all_client(){
+        //query to the database
+        $sql = "SELECT * FROM clientes";
+
+        $db = new database();
+        $results = $db->EXE_QUERY($sql);
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    //===================================================================================
+
     public function get_all_products(){
-        
+
+        $db = new database();
+        $results = $db->EXE_QUERY("SELECT * FROM produtos");
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    public function get_all_active_products(){
+        //query to the database
+
+        $db = new database();
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE deleted_at IS NULL");
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    public function get_all_inactive_products(){
+        //query to the database
+
+        $db = new database();
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE deleted_at IS NOT NULL");
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    public function get_all_products_without_stock(){
+        //query to the database
+
+        $db = new database();
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE quantidade <= 0 AND deleted_at IS NULL");
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
+        ];
+    }
+
+    public function create_new_client(){
+        if(
+            !isset($this->params['nome']) ||
+            !isset($this->params['email']) ||
+            !isset($this->params['telefone'])
+        ){
+            return $this->error_response('Insuficent client data.');
+        }
+
+        $db = new database();
+        $params = [
+            ':nome' => $this->params['nome'],
+            ':email' => $this->params['email'],
+        ];
+        $results = $db->EXE_QUERY("
+            SELECT id_cliente FROM clientes
+            WHERE nome = :nome OR email = :email  
+        ", $params);
+
+        if(count($results) != 0){
+            return $this->error_response('There is another client with the same name or email.');
+        }
+
+        $params = [
+            ':nome' => $this->params['nome'],
+            ':email' => $this->params['email'],
+            ':telefone' => $this->params['telefone'],
+        ];
+
+        $db->EXE_QUERY("
+            INSERT INTO clientes VALUES(
+                0,
+                :nome,
+                :email,
+                :telefone,
+                NOW(),
+                NOW(),
+                NULL
+            )
+        ", $params);
+
+        return[
+            'status' => 'Success',
+            'message' => 'Novo cliente adicionado.',
+            'result' => []
+        ];
     }
 }
