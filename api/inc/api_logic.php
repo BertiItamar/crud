@@ -197,4 +197,69 @@ class api_logic{
             'result' => []
         ];
     }
+
+    public function create_new_product(){
+        if(
+            !isset($this->params['produtos']) ||
+            !isset($this->params['quantidade']) 
+        ){
+            return $this->error_response('Insuficent product data.');
+        }
+
+        $db = new database();
+        $params = [
+            ':produtos' => $this->params['produtos'],
+        ];
+        $results = $db->EXE_QUERY("
+            SELECT id_produtos FROM produtos
+            WHERE produtos = :produtos 
+        ", $params);
+
+        if(count($results) != 0){
+            return $this->error_response('There is another product with the same name.');
+        }
+
+        $params = [
+            ':produtos' => $this->params['produtos'],
+            ':quantidade' => $this->params['quantidade'],
+        ];
+
+        $db->EXE_QUERY("
+            INSERT INTO produtos VALUES(
+                0,
+                :produtos,
+                :quantidade,
+                NOW(),
+                NOW(),
+                NULL
+            )
+        ", $params);
+
+        return[
+            'status' => 'Success',
+            'message' => 'Novo produto adicionado.',
+            'result' => []
+        ];
+    }
+
+    public function delete_client(){
+        if(
+            !isset($this->params['id'])
+        ){
+            return $this->error_response('Insuficent client data.');
+        }
+
+        $db = new database();
+        $params = [
+            ':id_cliente' => $this->params['id']
+        ];
+
+        $db->EXE_NON_QUERY("UPDATE clientes SET deleted_at = NOW() WHERE id_cliente = :id_cliente", $params);
+
+        return[
+            'status' => 'Success',
+            'message' => 'Cliente deletado com sucesso.',
+            'result' => []
+        ];
+    }
 }

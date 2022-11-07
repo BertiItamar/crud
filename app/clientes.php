@@ -4,7 +4,7 @@ require_once('inc/config.php');
 require_once('inc/api_functions.php');
 require_once('inc/functions.php');
 
-$results = api_request('get_all_client', 'GET');
+$results = api_request('get_all_active_client', 'GET');
 
 if ($results['data']['status'] == 'Success') {
     $clientes = $results['data']['result'];
@@ -53,6 +53,7 @@ if ($results['data']['status'] == 'Success') {
                             <th>Nome</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
+                            <th></th>
                         </thead>
 
                         <?php endif; ?>
@@ -63,6 +64,9 @@ if ($results['data']['status'] == 'Success') {
                                     <td><?= $cliente['nome'] ?></td>
                                     <td><?= $cliente['email'] ?></td>
                                     <td><?= $cliente['telefone'] ?></td>
+                                    <td>
+                                        <a href="clientes_delete.php?id=<?= $cliente['id_cliente'] ?> ">Delete</a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

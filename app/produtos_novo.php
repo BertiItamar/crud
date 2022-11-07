@@ -11,14 +11,12 @@ $success_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $nome = $_POST['text_nome'];
-    $email = $_POST['text_email'];
-    $telefone = $_POST['text_telefone'];
+    $produto = $_POST['text_produtos'];
+    $quantidade = $_POST['text_quantidade'];
 
-    $results = api_request('create_new_client', 'POST', [
-        'nome' => $nome,
-        'email' => $email,
-        'telefone' => $telefone
+    $results = api_request('create_new_product', 'POST', [
+        'produtos' => $produto,
+        'quantidade' => $quantidade,
     ]);
 
     if ($results['data']['status'] == 'Error') {
@@ -50,24 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         <div class="col-sm-6 offset-sm-3 card bg-ligth p-4">
-            <form action="clientes_novo.php" method="POST">
+            <form action="produtos_novo.php" method="POST">
                 <div class="mb-3">
-                    <label>Nome do cliente:</label>
-                    <input type="text" name="text_nome" class="form-control">
+                    <label>Nome do produto:</label>
+                    <input type="text" name="text_produto" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label>Telefone:</label>
-                    <input type="text" name="text_telefone" class="form-control">
+                    <label>Quantidade:</label>
+                    <input type="number" name="number_quantidade" class="form-control">
                 </div>
 
-                <div class="mb-3">
-                    <label>E-mail:</label>
-                    <input type="text" name="text_email" class="form-control">
-                </div>
                 <div class="mb-3 text-center">
                     <input type="submit" value="Save" class="btn btn-primary">
-                    <a href="clientes.php" class="btn btn-dark">Cancel</a>
+                    <a href="produtos.php" class="btn btn-dark">Cancel</a>
                 </div>
 
                 <?php if (!empty($error_message)) : ?>
