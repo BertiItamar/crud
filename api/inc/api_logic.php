@@ -263,46 +263,52 @@ class api_logic{
         ];
     }
 
-    public function create_new_addess(){
+    //==================================================================================================================//
+
+    public function create_new_address(){
         if(
             !isset($this->params['rua']) ||
             !isset($this->params['cidade']) ||
             !isset($this->params['estado']) ||
-            !isset($this->params['cep'])
+            !isset($this->params['cep']) ||
+            !isset($this->params['id_cliente'])
+
         ){
             return $this->error_response('Insuficent product data.');
         }
+        //$id_client = select id_Client from clientes where id_cliente = :id_client, $params
 
         $db = new database();
         $params = [
-            ':endereco_clientes' => $this->params['endereco_clientes'],
+            ':id_cliente' => $this->params['id_cliente'],
         ];
+        
         $results = $db->EXE_QUERY("
-            SELECT id_endereco_clientes FROM endereco_clientes
-            WHERE endereco_clientes = :endereco_clientes 
+            SELECT id_cliente FROM clientes
+            WHERE id_cliente = :id_cliente 
         ", $params);
 
-        if(count($results) != 0){
-            return $this->error_response('There is another product with the same name.');
+
+        if(count($results) == 0){
+            return $this->error_response('Não existe um cleinte com esse ID');
         }
 
         $params = [
             'rua' => $this->params['rua'],
             ':cidade' => $this->params['cidade'],
             ':estado' => $this->params['estado'],
-            ':cep' => $this->params['cep']     
+            ':cep' => $this->params['cep'],
+            ':id_cliente' => $results[0]['id_cliente']
+
         ];
 
-        $db->EXE_QUERY("
-            INSERT INTO endereco_clientes VALUES(
+        $db->EXE_QUERY("INSERT INTO endereco_clientes VALUES(
                 0,
                 :rua,
                 :cidade,
-                estado,
-                cep,
-                NOW(),
-                NOW(),
-                NULL
+                :estado,
+                :cep,
+                :id_cliente
             )
         ", $params);
 
@@ -310,6 +316,19 @@ class api_logic{
             'status' => 'Success',
             'message' => 'New adress add.',
             'result' => []
+        ];
+    }
+
+
+    public function get_all_address(){
+
+        $db = new database();
+        $results = $db->EXE_QUERY("SELECT * FROM endereco_clientes");
+
+        return[
+            'status' => 'Success',
+            'message' => '',
+            'result' => $results
         ];
     }
 }

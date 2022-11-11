@@ -28,6 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $nome = $_POST['text_nome'];
+    $email = $_POST['text_email'];
+    $telefone = $_POST['text_telefone'];
+
+    $results = api_request('create_new_client', 'POST', [
+        'nome' => $nome,
+        'email' => $email,
+        'telefone' => $telefone
+    ]);
+
+    if ($results['data']['status'] == 'Error') {
+        $error_message = $results['data']['message'];
+    } elseif ($results['data']['status'] == 'Success') {
+        $success_message = $results['data']['message'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -69,9 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 
                 <div class="form-group">
-                    <label for="inputAddress2">Rua</label>
+                    <label for="text_rua">Rua</label>
                     <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, hotel, casa, etc.">
                 </div>
+                <br>
             <div class="div-form">
                 <div class="form-group col-md-4">
                     <label for="inputCity">Cidade</label>
@@ -97,8 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </label>
                     <br>
                     <div class="mb-3 text-center">
-                        <a href="clientes.php" class="btn btn-secondary btn-sm">Cancelar</a>
-                        <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
+                        <a href="clientes.php" class="btn btn-secondary btn-lg">Cancelar</a>
+                        <input type="submit" value="Salvar" class="btn btn-primary btn-lg">
                         <?php if(!empty($error_message)): ?>
                             <div class="alert alert-danger p-2 text-center">
                                 <?= $error_message ?>
