@@ -262,4 +262,54 @@ class api_logic{
             'result' => []
         ];
     }
+
+    public function create_new_addess(){
+        if(
+            !isset($this->params['rua']) ||
+            !isset($this->params['cidade']) ||
+            !isset($this->params['estado']) ||
+            !isset($this->params['cep'])
+        ){
+            return $this->error_response('Insuficent product data.');
+        }
+
+        $db = new database();
+        $params = [
+            ':endereco_clientes' => $this->params['endereco_clientes'],
+        ];
+        $results = $db->EXE_QUERY("
+            SELECT id_endereco_clientes FROM endereco_clientes
+            WHERE endereco_clientes = :endereco_clientes 
+        ", $params);
+
+        if(count($results) != 0){
+            return $this->error_response('There is another product with the same name.');
+        }
+
+        $params = [
+            'rua' => $this->params['rua'],
+            ':cidade' => $this->params['cidade'],
+            ':estado' => $this->params['estado'],
+            ':cep' => $this->params['cep']     
+        ];
+
+        $db->EXE_QUERY("
+            INSERT INTO endereco_clientes VALUES(
+                0,
+                :rua,
+                :cidade,
+                estado,
+                cep,
+                NOW(),
+                NOW(),
+                NULL
+            )
+        ", $params);
+
+        return[
+            'status' => 'Success',
+            'message' => 'New adress add.',
+            'result' => []
+        ];
+    }
 }

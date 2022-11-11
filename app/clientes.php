@@ -65,7 +65,7 @@ if ($results['data']['status'] == 'Success') {
                                     <td><?= $cliente['email'] ?></td>
                                     <td><?= $cliente['telefone'] ?></td>
                                     <td>
-                                        <a href="clientes_delete.php?id=<?= $cliente['id_cliente'] ?> ">Delete</a>
+                                        <a class="btn btn-danger" href="clientes_delete.php?id=<?= $cliente['id_cliente'] ?> ">Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -38,19 +37,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Consumidora - Novo cliente</title>
+    <title>Novo cliente</title>
     <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/clientes_novo.css">
+
 </head>
 
 <body class="bg-dark">
 
-    <?php include('inc/nav.php') ?>
+<?php include('inc/nav.php') ?>
 
-    <div class="row my-5 mx-auto">
+<section class="container">
+    <div class="row my-5">
+        <div class="col-sm-6 offset-sm-3 card bg-light p-4">
 
-
-        <div class="col-sm-6 offset-sm-3 card bg-ligth p-4">
             <form action="clientes_novo.php" method="POST">
+
                 <div class="mb-3">
                     <label>Nome do cliente:</label>
                     <input type="text" name="text_nome" class="form-control">
@@ -62,35 +64,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <div class="mb-3">
-                    <label>E-mail:</label>
-                    <input type="text" name="text_email" class="form-control">
+                    <label>Email:</label>
+                    <input type="email" name="text_email" class="form-control">
                 </div>
-                <div class="mb-3 text-center">
-                    <input type="submit" value="Save" class="btn btn-primary">
-                    <a href="clientes.php" class="btn btn-dark">Cancel</a>
+                
+                <div class="form-group">
+                    <label for="inputAddress2">Rua</label>
+                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, hotel, casa, etc.">
                 </div>
-
-                <?php if (!empty($error_message)) : ?>
-
-                    <div class="alert alert-danger p-2 text-center">
-                        <?= $error_message ?>
+            <div class="div-form">
+                <div class="form-group col-md-4">
+                    <label for="inputCity">Cidade</label>
+                    <input type="text" class="form-control" id="inputCity">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputEstado">Estado</label>
+                    <select id="inputEstado" class="form-control">
+                        <option selected>Escolher...</option>
+                        <option>...</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputCEP">CEP</label>
+                    <input type="text" class="form-control" id="inputCEP">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck">
+                    <label class="form-check-label" for="gridCheck">
+                        Clique em mim
+                    </label>
+                    <br>
+                    <div class="mb-3 text-center">
+                        <a href="clientes.php" class="btn btn-secondary btn-sm">Cancelar</a>
+                        <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
+                        <?php if(!empty($error_message)): ?>
+                            <div class="alert alert-danger p-2 text-center">
+                                <?= $error_message ?>
+                            </div>
+                            <?php elseif(!empty($success_message)):?>
+                                <div class="alert alert-success p-2 text-center">
+                                    <?= $success_message ?>
+                            </div>
+                            <?php endif; ?>
                     </div>
-
-                <?php elseif (!empty($success_message)) : ?>
-
-                    <div class="alert alert-success p-2 text-center">
-                        <?= $success_message ?>
-                    </div>
-
-                <?php endif; ?>
-            </form>
-        </div>
-
+                </div>
+            </div>
+        </form>
     </div>
-
+    
     <script>
         src = "../assets/bootstrap/bootstrap.bundle.min.js"
-    </script>
+        </script>
 </body>
 
 </html>

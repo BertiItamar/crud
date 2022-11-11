@@ -1,0 +1,5 @@
+.div-form{
+    flex-direction: row !important;
+    display: flex;
+    justify-content: space-between;
+}
