@@ -27,26 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $success_message = $results['data']['message'];
     }
 }
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-    $nome = $_POST['text_nome'];
-    $email = $_POST['text_email'];
-    $telefone = $_POST['text_telefone'];
-
-    $results = api_request('create_new_client', 'POST', [
-        'nome' => $nome,
-        'email' => $email,
-        'telefone' => $telefone
-    ]);
-
-    if ($results['data']['status'] == 'Error') {
-        $error_message = $results['data']['message'];
-    } elseif ($results['data']['status'] == 'Success') {
-        $success_message = $results['data']['message'];
-    }
-}
+//===============================================//
 ?>
 
 <!DOCTYPE html>
@@ -86,35 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label>Email:</label>
                     <input type="email" name="text_email" class="form-control">
                 </div>
-                
-                <div class="form-group">
-                    <label for="text_rua">Rua</label>
-                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, hotel, casa, etc.">
-                </div>
-                <br>
-            <div class="div-form">
-                <div class="form-group col-md-4">
-                    <label for="inputCity">Cidade</label>
-                    <input type="text" class="form-control" id="inputCity">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="inputEstado">Estado</label>
-                    <select id="inputEstado" class="form-control">
-                        <option selected>Escolher...</option>
-                        <option>...</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="inputCEP">CEP</label>
-                    <input type="text" class="form-control" id="inputCEP">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                    <label class="form-check-label" for="gridCheck">
-                        Clique em mim
-                    </label>
                     <br>
                     <div class="mb-3 text-center">
                         <a href="clientes.php" class="btn btn-secondary btn-lg">Cancelar</a>
@@ -131,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
             </div>
-        </form>
+           </form>
     </div>
     
     <script>
