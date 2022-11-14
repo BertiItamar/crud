@@ -1,10 +1,31 @@
 <?php
 
+use App\Webservice\ViaCep;
 use LDAP\Result;
 
 require_once('inc/config.php');
 require_once('inc/api_functions.php');
 require_once('inc/functions.php');
+
+
+function consultarCEP($cep){
+        
+    $curl = curl_init();
+
+    curl_setopt_array($curl, [
+        CURLOPT_URL => 'https://viacep.com.br/ws/'.$cep .'/json/',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => 'GET'
+    ]);
+
+    $response = curl_exec($curl);
+    
+    curl_close($curl);
+
+    $array = json_decode($response, true);
+
+    return isset($array['cep']) ? $array : null;        
+};
 
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -14,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
         header("Location: clientes.php");
     }
 
-    $cliente = api_request('get_client', 'POST', ['id' => $_GET['id']])['data']['results'][0];
+    // $cliente = api_request('get_client', 'POST', ['id' => $_GET['id']])['data']['results'][0];
 }
 
 //===============================================//
@@ -71,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div class="mb-3">
                         <label>Rua</label>
-                        <input type="text" name="text_rua" class="form-control">
+                        <input type="text" name="text_rua" class="form-control" value="<?= $array['logradouro'] ?>">
                     </div>
                     <br>
                     <div class="mb-3">
